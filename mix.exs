@@ -43,6 +43,8 @@ defmodule ContractManager.Mixfile do
       {:cowboy, "~> 1.0"},
       {:react_phoenix, "~> 0.5.1"},
       {:comeonin, "~> 4.0"},
+      {:argon2_elixir, "~> 1.2"},
+      {:jason, "~> 1.0"},
       {:guardian, "~> 1.0"},
       {:credo, "~> 0.9.1", only: [:dev, :test], runtime: false},
       {:ex_machina, "~> 2.2", only: :test},

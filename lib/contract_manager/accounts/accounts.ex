@@ -14,13 +14,16 @@ defmodule ContractManager.Accounts do
   ## Examples
 
       iex> create_registration(%{field: value})
-      {:ok, %Registration{}}
+      {:ok, %User{}}
 
       iex> create_registration(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
   def create_registration(attrs \\ %{}) do
+    %User{}
+    |> User.changeset(attrs)
+    |> Repo.insert
   end
 
   @doc """

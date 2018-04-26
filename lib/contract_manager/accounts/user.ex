@@ -5,6 +5,8 @@ defmodule ContractManager.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:id, :first_name, :last_name, :email]}
+
   schema "users" do
     field(:email, :string)
     field(:encrypted_password, :string)
@@ -14,12 +16,13 @@ defmodule ContractManager.Accounts.User do
     timestamps()
   end
 
-  @required_fields ~w(full_name email password)
+  @required_fields ~w(full_name email password)a
 
   @doc false
   def changeset(model, params \\ %{}) do
     model
     |> cast(params, @required_fields)
+    |> validate_required(@required_fields)
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 5)
     |> validate_confirmation(:password, message: "Password does not match")
@@ -33,7 +36,7 @@ defmodule ContractManager.Accounts.User do
         put_change(
           changeset,
           :encrypted_password,
-          Comeonin.Bcrypt.hashpwsalt(password)
+          Comeonin.Argon2.hashpwsalt(password)
         )
 
       _ ->
