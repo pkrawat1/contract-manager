@@ -28,6 +28,7 @@ defmodule ContractManagerWeb.Router do
       post("/registrations", RegistrationController, :create)
       post("/sessions", SessionController, :create)
       delete("/sessions", SessionController, :delete)
+      resources("/vendors", VendorController)
     end
   end
 end
