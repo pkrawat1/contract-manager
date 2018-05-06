@@ -13,13 +13,6 @@ defmodule ContractManagerWeb.Router do
     plug(:accepts, ["json"])
   end
 
-  scope "/", ContractManagerWeb do
-    # Use the default browser stack
-    pipe_through(:browser)
-
-    get("/*main", MainController, :index)
-  end
-
   # Other scopes may use custom stacks.
   scope "/api", ContractManagerWeb do
     pipe_through(:api)
@@ -29,6 +22,15 @@ defmodule ContractManagerWeb.Router do
       post("/sessions", SessionController, :create)
       delete("/sessions", SessionController, :delete)
       resources("/vendors", VendorController)
+      resources("/categories", CategoryController)
+      resources("/contracts", ContractController)
     end
+  end
+
+  scope "/", ContractManagerWeb do
+    # Use the default browser stack
+    pipe_through(:browser)
+
+    get("/*main", MainController, :index)
   end
 end

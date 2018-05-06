@@ -11,7 +11,6 @@ defmodule ContractManagerWeb.VendorView do
   end
 
   def render("vendor.json", %{vendor: vendor}) do
-    %{id: vendor.id,
-      name: vendor.name}
+    %{id: vendor.id, name: vendor.name}
   end
 end

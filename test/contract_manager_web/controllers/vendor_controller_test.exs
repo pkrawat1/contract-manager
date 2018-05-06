@@ -19,7 +19,7 @@ defmodule ContractManagerWeb.VendorControllerTest do
 
   describe "index" do
     test "lists all vendors", %{conn: conn} do
-      conn = get(build_conn, vendor_path(conn, :index))
+      conn = get(conn, vendor_path(conn, :index))
       assert json_response(conn, 200)["data"] == []
     end
   end

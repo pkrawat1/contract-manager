@@ -4,7 +4,7 @@ defmodule ContractManagerWeb.VendorController do
   alias ContractManager.Contracts
   alias ContractManager.Contracts.Vendor
 
-  action_fallback ContractManagerWeb.FallbackController
+  action_fallback(ContractManagerWeb.FallbackController)
 
   def index(conn, _params) do
     vendors = Contracts.list_vendors()
@@ -35,6 +35,7 @@ defmodule ContractManagerWeb.VendorController do
 
   def delete(conn, %{"id" => id}) do
     vendor = Contracts.get_vendor!(id)
+
     with {:ok, %Vendor{}} <- Contracts.delete_vendor(vendor) do
       send_resp(conn, :no_content, "")
     end
