@@ -21,5 +21,8 @@ defmodule ContractManagerWeb.SessionController do
   end
 
   def delete(conn, _) do
+    conn
+    |> Guardian.Plug.sign_out()
+    |> render("delete.json")
   end
 end

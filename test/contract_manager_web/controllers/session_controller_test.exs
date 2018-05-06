@@ -12,6 +12,14 @@ defmodule ContractManagerWeb.SessionControllerTest do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
   end
 
+  defp sign_in(user) do
+    post(
+      build_conn,
+      session_path(build_conn, :create),
+      session: %{email: user.email, password: user.password}
+    )
+  end
+
   describe "User sessions" do
     setup do: [user: insert(:user)]
 
@@ -35,7 +43,7 @@ defmodule ContractManagerWeb.SessionControllerTest do
     end
 
     @tag user: :invalid
-    test "create_session/1 with invalid data", context do
+    test "create_session/1 with invalid data" do
       conn =
         post(
           build_conn,
@@ -44,6 +52,16 @@ defmodule ContractManagerWeb.SessionControllerTest do
         )
 
       assert %{"error" => "Invalid email or password"} = json_response(conn, 422)
+    end
+
+    @tag user: :valid
+    test "delete with invalid data", context do
+      %{user: user} = context
+      conn = sign_in(user)
+
+      conn = delete(conn, session_path(conn, :delete))
+
+      assert %{"ok" => true} = json_response(conn, 200)
     end
   end
 end
