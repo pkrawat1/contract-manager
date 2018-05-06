@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button } from 'reactstrap';
-import {Footer, Header} from "./layout";
+import { Footer, Header } from "./layout";
 
 class App extends Component {
   render() {

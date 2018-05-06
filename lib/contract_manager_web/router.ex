@@ -13,9 +13,12 @@ defmodule ContractManagerWeb.Router do
     plug(:accepts, ["json"])
   end
 
-  # scope "/", ContractManagerWeb do
-  #   pipe_through :browser # Use the default browser stack
-  # end
+  scope "/", ContractManagerWeb do
+    # Use the default browser stack
+    pipe_through(:browser)
+
+    get("/*main", MainController, :index)
+  end
 
   # Other scopes may use custom stacks.
   scope "/api", ContractManagerWeb do
