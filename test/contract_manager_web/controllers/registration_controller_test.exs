@@ -32,5 +32,19 @@ defmodule ContractManagerWeb.RegistrationControllerTest do
                "email" => valid_user_data.email
              }
     end
+
+    @tag user: :invalid
+    test "create_registration/1 with invalid/existing data", context do
+      params = %{email: "abcd", full_name: "", password: 123}
+      conn = post(build_conn, registration_path(build_conn, :create), registration: params)
+
+      assert %{
+               "errors" => %{
+                 "email" => ["has invalid format"],
+                 "full_name" => ["can't be blank"],
+                 "password" => ["is invalid"]
+               }
+             } = json_response(conn, 422)
+    end
   end
 end
