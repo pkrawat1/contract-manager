@@ -24,7 +24,14 @@ defmodule ContractManagerWeb.RegistrationControllerTest do
     test "create_registration/1 with valid data", context do
       %{valid_user_data: valid_user_data} = context
       params = Map.from_struct(valid_user_data)
-      conn = post(build_conn, registration_path(build_conn, :create), registration: params)
+
+      conn =
+        post(
+          build_conn,
+          registration_path(build_conn, :create),
+          registration: params
+        )
+
       assert %{"jwt" => jwt, "user" => user} = json_response(conn, 201)
 
       assert user = %{

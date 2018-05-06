@@ -31,13 +31,26 @@ defmodule ContractManager.Accounts do
 
   ## Examples
 
-      iex> create_session(%{field: value})
+      iex> create_session(%{"email" => email, "password" => password})
       {:ok, %User{}}
 
       iex> create_session(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+      :error
 
   """
-  def create_session(attrs \\ %{}) do
+  def create_session(%{"email" => email, "password" => password}) do
+    user = Repo.get_by(User, email: String.downcase(email))
+
+    case check_password(user, password) do
+      true -> {:ok, user}
+      _ -> :error
+    end
+  end
+
+  defp check_password(user, password) do
+    case user do
+      nil -> Comeonin.Argon2.dummy_checkpw()
+      _ -> Comeonin.Argon2.checkpw(password, user.encrypted_password)
+    end
   end
 end

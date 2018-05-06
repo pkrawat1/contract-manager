@@ -2,15 +2,15 @@ defmodule ContractManagerWeb.Router do
   use ContractManagerWeb, :router
 
   pipeline :browser do
-    plug :accepts, ["html"]
-    plug :fetch_session
-    plug :fetch_flash
-    plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug(:accepts, ["html"])
+    plug(:fetch_session)
+    plug(:fetch_flash)
+    plug(:protect_from_forgery)
+    plug(:put_secure_browser_headers)
   end
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug(:accepts, ["json"])
   end
 
   # scope "/", ContractManagerWeb do
@@ -19,10 +19,11 @@ defmodule ContractManagerWeb.Router do
 
   # Other scopes may use custom stacks.
   scope "/api", ContractManagerWeb do
-    pipe_through :api
+    pipe_through(:api)
 
     scope "/v1" do
-      post "/registrations", RegistrationController, :create
+      post("/registrations", RegistrationController, :create)
+      post("/sessions", SessionController, :create)
     end
   end
 end
