@@ -18,7 +18,10 @@ config :contract_manager, ContractManager.Repo,
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
-
 config :argon2_elixir,
   t_cost: 1,
   m_cost: 8
+
+config :contract_manager, ContractManagerWeb.Guardian,
+  issuer: "contract_manager",
+  secret_key: "B3pQR3usJnpHaH7f9Jw3OtD5RVcAsgpOzqx/rpl2vQ6Baafci8iNtUxDqRfTMpW0"

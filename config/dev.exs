@@ -11,8 +11,14 @@ config :contract_manager, ContractManagerWeb.Endpoint,
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
-  watchers: [node: ["node_modules/brunch/bin/brunch", "watch", "--stdin",
-                    cd: Path.expand("../assets", __DIR__)]]
+  watchers: [
+    node: [
+      "node_modules/brunch/bin/brunch",
+      "watch",
+      "--stdin",
+      cd: Path.expand("../assets", __DIR__)
+    ]
+  ]
 
 # ## SSL Support
 #
@@ -56,3 +62,7 @@ config :contract_manager, ContractManager.Repo,
   database: "contract_manager_dev",
   hostname: "localhost",
   pool_size: 10
+
+config :contract_manager, ContractManagerWeb.Guardian,
+  issuer: "contract_manager",
+  secret_key: "B3pQR3usJnpHaH7f9Jw3OtD5RVcAsgpOzqx/rpl2vQ6Baafci8iNtUxDqRfTMpW0"

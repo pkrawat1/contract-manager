@@ -3,12 +3,13 @@ defmodule ContractManager.Repo.Migrations.CreateUsers do
 
   def change do
     create table(:users) do
-      add :full_name, :string
-      add :email, :string
-      add :encrypted_password, :string
+      add(:full_name, :string)
+      add(:email, :string)
+      add(:encrypted_password, :string)
 
       timestamps()
     end
 
+    create(unique_index(:users, [:email]))
   end
 end

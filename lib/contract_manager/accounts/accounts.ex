@@ -23,7 +23,7 @@ defmodule ContractManager.Accounts do
   def create_registration(attrs \\ %{}) do
     %User{}
     |> User.changeset(attrs)
-    |> Repo.insert
+    |> Repo.insert()
   end
 
   @doc """
