@@ -13,6 +13,10 @@ defmodule ContractManagerWeb.Router do
     plug(:accepts, ["json"])
   end
 
+  pipeline :api_auth do
+    plug(ContractManagerWeb.AuthAccessPipeline)
+  end
+
   # Other scopes may use custom stacks.
   scope "/api", ContractManagerWeb do
     pipe_through(:api)
@@ -20,6 +24,13 @@ defmodule ContractManagerWeb.Router do
     scope "/v1" do
       post("/registrations", RegistrationController, :create)
       post("/sessions", SessionController, :create)
+    end
+  end
+
+  scope "/api", ContractManagerWeb do
+    pipe_through(:api_auth)
+
+    scope "/v1" do
       delete("/sessions", SessionController, :delete)
       resources("/vendors", VendorController)
       resources("/categories", CategoryController)

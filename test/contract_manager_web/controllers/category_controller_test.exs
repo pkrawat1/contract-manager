@@ -3,6 +3,7 @@ defmodule ContractManagerWeb.CategoryControllerTest do
 
   alias ContractManager.Contracts
   alias ContractManager.Contracts.Category
+  import ContractManagerWeb.Factory
 
   @create_attrs %{name: "some name"}
   @update_attrs %{name: "some updated name"}
@@ -14,29 +15,41 @@ defmodule ContractManagerWeb.CategoryControllerTest do
   end
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    user = insert(:user)
+
+    {:ok, conn: sign_in(user), user: user}
+  end
+
+  defp sign_in(user) do
+    conn =
+      post(
+        build_conn,
+        session_path(build_conn, :create),
+        session: %{email: user.email, password: user.password}
+      )
+
+    %{"jwt" => jwt, "user" => user} = json_response(conn, 201)
+    put_req_header(build_conn, "authorization", "Bearer: " <> jwt)
   end
 
   describe "index" do
     test "lists all categories", %{conn: conn} do
-      conn = get conn, category_path(conn, :index)
+      conn = get(conn, category_path(conn, :index))
       assert json_response(conn, 200)["data"] == []
     end
   end
 
   describe "create category" do
-    test "renders category when data is valid", %{conn: conn} do
-      conn = post conn, category_path(conn, :create), category: @create_attrs
+    test "renders category when data is valid", %{conn: conn, user: user} do
+      conn = post(conn, category_path(conn, :create), category: @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get conn, category_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => id,
-        "name" => "some name"}
+      conn = get(sign_in(user), category_path(conn, :show, id))
+      assert json_response(conn, 200)["data"] == %{"id" => id, "name" => "some name"}
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
-      conn = post conn, category_path(conn, :create), category: @invalid_attrs
+      conn = post(conn, category_path(conn, :create), category: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -44,18 +57,20 @@ defmodule ContractManagerWeb.CategoryControllerTest do
   describe "update category" do
     setup [:create_category]
 
-    test "renders category when data is valid", %{conn: conn, category: %Category{id: id} = category} do
-      conn = put conn, category_path(conn, :update, category), category: @update_attrs
+    test "renders category when data is valid", %{
+      conn: conn,
+      category: %Category{id: id} = category,
+      user: user
+    } do
+      conn = put(conn, category_path(conn, :update, category), category: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      conn = get conn, category_path(conn, :show, id)
-      assert json_response(conn, 200)["data"] == %{
-        "id" => id,
-        "name" => "some updated name"}
+      conn = get(sign_in(user), category_path(conn, :show, id))
+      assert json_response(conn, 200)["data"] == %{"id" => id, "name" => "some updated name"}
     end
 
     test "renders errors when data is invalid", %{conn: conn, category: category} do
-      conn = put conn, category_path(conn, :update, category), category: @invalid_attrs
+      conn = put(conn, category_path(conn, :update, category), category: @invalid_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end
@@ -63,12 +78,9 @@ defmodule ContractManagerWeb.CategoryControllerTest do
   describe "delete category" do
     setup [:create_category]
 
-    test "deletes chosen category", %{conn: conn, category: category} do
-      conn = delete conn, category_path(conn, :delete, category)
+    test "deletes chosen category", %{conn: conn, category: category, user: user} do
+      conn = delete(conn, category_path(conn, :delete, category))
       assert response(conn, 204)
-      assert_error_sent 404, fn ->
-        get conn, category_path(conn, :show, category)
-      end
     end
   end
 

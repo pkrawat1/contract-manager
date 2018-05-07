@@ -18,7 +18,7 @@ defmodule ContractManagerWeb.Guardian do
     # the resource id so here we'll rely on that to look it up.
 
     id = claims["sub"]
-    resource = ContractManager.get_resource_by_id(id)
+    resource = ContractManager.Accounts.get_user(id)
     {:ok, resource}
   end
 end

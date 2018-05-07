@@ -9,15 +9,21 @@ defmodule ContractManagerWeb.SessionControllerTest do
   alias ContractManager.Accounts.User
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    user = insert(:user)
+
+    {:ok, conn: sign_in(user), user: user}
   end
 
   defp sign_in(user) do
-    post(
-      build_conn,
-      session_path(build_conn, :create),
-      session: %{email: user.email, password: user.password}
-    )
+    conn =
+      post(
+        build_conn,
+        session_path(build_conn, :create),
+        session: %{email: user.email, password: user.password}
+      )
+
+    %{"jwt" => jwt, "user" => user} = json_response(conn, 201)
+    put_req_header(build_conn, "authorization", "Bearer: " <> jwt)
   end
 
   describe "User sessions" do

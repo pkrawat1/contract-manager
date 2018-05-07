@@ -4,7 +4,7 @@ defmodule ContractManagerWeb.CategoryController do
   alias ContractManager.Contracts
   alias ContractManager.Contracts.Category
 
-  action_fallback ContractManagerWeb.FallbackController
+  action_fallback(ContractManagerWeb.FallbackController)
 
   def index(conn, _params) do
     categories = Contracts.list_categories()
@@ -35,6 +35,7 @@ defmodule ContractManagerWeb.CategoryController do
 
   def delete(conn, %{"id" => id}) do
     category = Contracts.get_category!(id)
+
     with {:ok, %Category{}} <- Contracts.delete_category(category) do
       send_resp(conn, :no_content, "")
     end

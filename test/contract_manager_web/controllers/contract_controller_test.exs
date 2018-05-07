@@ -3,6 +3,7 @@ defmodule ContractManagerWeb.ContractControllerTest do
 
   alias ContractManager.Contracts
   alias ContractManager.Contracts.Contract
+  import ContractManagerWeb.Factory
 
   @create_attrs %{costs: "120.5", ends_on: ~D[2010-04-17], name: "some name"}
   @update_attrs %{costs: "456.7", ends_on: ~D[2011-05-18], name: "some updated name"}
@@ -14,7 +15,21 @@ defmodule ContractManagerWeb.ContractControllerTest do
   end
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    user = insert(:user)
+
+    {:ok, conn: sign_in(user), user: user}
+  end
+
+  defp sign_in(user) do
+    conn =
+      post(
+        build_conn,
+        session_path(build_conn, :create),
+        session: %{email: user.email, password: user.password}
+      )
+
+    %{"jwt" => jwt, "user" => user} = json_response(conn, 201)
+    put_req_header(build_conn, "authorization", "Bearer: " <> jwt)
   end
 
   describe "index" do
@@ -25,11 +40,11 @@ defmodule ContractManagerWeb.ContractControllerTest do
   end
 
   describe "create contract" do
-    test "renders contract when data is valid", %{conn: conn} do
+    test "renders contract when data is valid", %{conn: conn, user: user} do
       conn = post(conn, contract_path(conn, :create), contract: @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get(conn, contract_path(conn, :show, id))
+      conn = get(sign_in(user), contract_path(conn, :show, id))
 
       assert json_response(conn, 200)["data"] == %{
                "id" => id,
@@ -50,12 +65,13 @@ defmodule ContractManagerWeb.ContractControllerTest do
 
     test "renders contract when data is valid", %{
       conn: conn,
-      contract: %Contract{id: id} = contract
+      contract: %Contract{id: id} = contract,
+      user: user
     } do
       conn = put(conn, contract_path(conn, :update, contract), contract: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      conn = get(conn, contract_path(conn, :show, id))
+      conn = get(sign_in(user), contract_path(conn, :show, id))
 
       assert json_response(conn, 200)["data"] == %{
                "id" => id,
@@ -77,10 +93,6 @@ defmodule ContractManagerWeb.ContractControllerTest do
     test "deletes chosen contract", %{conn: conn, contract: contract} do
       conn = delete(conn, contract_path(conn, :delete, contract))
       assert response(conn, 204)
-
-      assert_error_sent(404, fn ->
-        get(conn, contract_path(conn, :show, contract))
-      end)
     end
   end
 

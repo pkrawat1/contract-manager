@@ -8,6 +8,10 @@ defmodule ContractManager.Accounts do
 
   alias ContractManager.Accounts.User
 
+  def get_user(id) do
+    Repo.get!(User, id)
+  end
+
   @doc """
   Creates a registration.
 

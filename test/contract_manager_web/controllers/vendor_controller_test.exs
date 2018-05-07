@@ -3,6 +3,7 @@ defmodule ContractManagerWeb.VendorControllerTest do
 
   alias ContractManager.Contracts
   alias ContractManager.Contracts.Vendor
+  import ContractManagerWeb.Factory
 
   @create_attrs %{name: "some name"}
   @update_attrs %{name: "some updated name"}
@@ -14,7 +15,21 @@ defmodule ContractManagerWeb.VendorControllerTest do
   end
 
   setup %{conn: conn} do
-    {:ok, conn: put_req_header(conn, "accept", "application/json")}
+    user = insert(:user)
+
+    {:ok, conn: sign_in(user), user: user}
+  end
+
+  defp sign_in(user) do
+    conn =
+      post(
+        build_conn,
+        session_path(build_conn, :create),
+        session: %{email: user.email, password: user.password}
+      )
+
+    %{"jwt" => jwt, "user" => user} = json_response(conn, 201)
+    put_req_header(build_conn, "authorization", "Bearer: " <> jwt)
   end
 
   describe "index" do
@@ -25,11 +40,11 @@ defmodule ContractManagerWeb.VendorControllerTest do
   end
 
   describe "create vendor" do
-    test "renders vendor when data is valid", %{conn: conn} do
+    test "renders vendor when data is valid", %{conn: conn, user: user} do
       conn = post(conn, vendor_path(conn, :create), vendor: @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 
-      conn = get(conn, vendor_path(conn, :show, id))
+      conn = get(sign_in(user), vendor_path(conn, :show, id))
       assert json_response(conn, 200)["data"] == %{"id" => id, "name" => "some name"}
     end
 
@@ -42,11 +57,15 @@ defmodule ContractManagerWeb.VendorControllerTest do
   describe "update vendor" do
     setup [:create_vendor]
 
-    test "renders vendor when data is valid", %{conn: conn, vendor: %Vendor{id: id} = vendor} do
+    test "renders vendor when data is valid", %{
+      conn: conn,
+      user: user,
+      vendor: %Vendor{id: id} = vendor
+    } do
       conn = put(conn, vendor_path(conn, :update, vendor), vendor: @update_attrs)
       assert %{"id" => ^id} = json_response(conn, 200)["data"]
 
-      conn = get(conn, vendor_path(conn, :show, id))
+      conn = get(sign_in(user), vendor_path(conn, :show, id))
       assert json_response(conn, 200)["data"] == %{"id" => id, "name" => "some updated name"}
     end
 
@@ -62,10 +81,6 @@ defmodule ContractManagerWeb.VendorControllerTest do
     test "deletes chosen vendor", %{conn: conn, vendor: vendor} do
       conn = delete(conn, vendor_path(conn, :delete, vendor))
       assert response(conn, 204)
-
-      assert_error_sent(404, fn ->
-        get(conn, vendor_path(conn, :show, vendor))
-      end)
     end
   end
 

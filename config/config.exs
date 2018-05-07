@@ -24,7 +24,7 @@ config :phoenix, :format_encoders, json: Jason
 
 config :contract_manager, ContractManagerWeb.AuthAccessPipeline,
   module: ContractManagerWeb.Guardian,
-  error_handler: ContractManagerWeb.AuthErrorHandler
+  error_handler: ContractManager.AuthErrorHandler
 
 config :mime, :types, %{
   "application/xml" => ["xml"]
