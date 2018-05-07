@@ -10,7 +10,9 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem } from 'reactstrap';
+  DropdownItem
+} from 'reactstrap';
+import axios from "axios";
 
 export default class Header extends Component {
   constructor(props) {
@@ -21,38 +23,31 @@ export default class Header extends Component {
       isOpen: false
     };
   }
+
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
     });
   }
+
+  renderLogoutDropdown() {
+    if (!this.props.isAuthenticated) { return }
+    return (<NavLink onClick={(event) => this.props.logout(event)}>Logout</NavLink>)
+  }
+
   render() {
     return (
       <div>
         <Navbar color="light" light expand="md">
           <NavbarBrand href="/"><img src="/images/logo.png" width="52" height="30" className="d-inline-block align-top" alt="" />Contract Manager</NavbarBrand>
-          {/* <NavbarToggler onClick={this.toggle} />
+          <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
-                  Account
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem>
-                    Sign In
-                  </DropdownItem>
-                  <DropdownItem>
-                    Sign Up
-                  </DropdownItem>
-                  <DropdownItem divider />
-                  <DropdownItem>
-                    Reset
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
+              <NavItem>
+                {this.renderLogoutDropdown()}
+              </NavItem>
             </Nav>
-          </Collapse> */}
+          </Collapse>
         </Navbar>
       </div>
     );
