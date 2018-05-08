@@ -9,3 +9,31 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias ContractManager.Contracts
+alias ContractManager.Repo
+
+vendors =
+  %{
+    "Vodafone" => ["Internet", "DSL", "Phone", "Mobile Phone"],
+    "O2" => ["Internet", "DSL"],
+    "Vattenfall" => ["Electricity", "Gas"],
+    "McFit" => ["Gym"],
+    "Sky" => ["Paid TV"]
+  }
+  |> Enum.map(fn {k, v} ->
+    {:ok, vendor} = Contracts.create_vendor(%{name: k})
+    Enum.map(v, &Contracts.create_category(%{name: &1, vendor_id: vendor.id}))
+    vendor |> Repo.preload(:categories)
+  end)
+
+vendor = List.first(vendors)
+category = List.first(vendor.categories)
+
+Contracts.create_contract(%{
+  name: "O2 Internet",
+  ends_on: ~D[2019-04-17],
+  vendor_id: vendor.id,
+  category_id: category.id,
+  costs: 10.5
+})

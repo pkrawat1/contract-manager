@@ -5,7 +5,7 @@ defmodule ContractManager.Contracts.Category do
 
   schema "categories" do
     field :name, :string
-    field :vendor_id, :id
+    belongs_to :vendor, ContractManager.Contracts.Vendor
 
     timestamps()
   end
@@ -13,7 +13,7 @@ defmodule ContractManager.Contracts.Category do
   @doc false
   def changeset(category, attrs) do
     category
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :vendor_id])
+    |> validate_required([:name, :vendor_id])
   end
 end

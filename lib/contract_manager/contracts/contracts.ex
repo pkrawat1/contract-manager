@@ -18,7 +18,7 @@ defmodule ContractManager.Contracts do
 
   """
   def list_vendors do
-    Repo.all(Vendor)
+    Repo.all(Vendor) |> Repo.preload(:categories)
   end
 
   @doc """
@@ -131,7 +131,7 @@ defmodule ContractManager.Contracts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_category!(id), do: Repo.get!(Category, id)
+  def get_category!(id), do: Repo.get!(Category, id) |> Repo.preload(:vendor)
 
   @doc """
   Creates a category.
@@ -210,7 +210,11 @@ defmodule ContractManager.Contracts do
 
   """
   def list_contracts do
-    Repo.all(Contract)
+    query = from(ct in Contract, where: ct.ends_on >= ^Date.utc_today())
+
+    query
+    |> Repo.all()
+    |> Repo.preload([:vendor, :category])
   end
 
   @doc """

@@ -21,7 +21,9 @@
     "reactstrap": "^5.0.0",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "moment": "2.22.1",
+    "react-moment": "0.7.0"
   },
   "devDependencies": {
     "babel-brunch": "6.1.1",

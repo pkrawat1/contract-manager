@@ -14,6 +14,9 @@ defmodule ContractManagerWeb.ContractView do
     %{id: contract.id,
       name: contract.name,
       costs: contract.costs,
-      ends_on: contract.ends_on}
+      ends_on: contract.ends_on,
+      vendor: contract.vendor.name,
+      category: contract.category.name
+    }
   end
 end

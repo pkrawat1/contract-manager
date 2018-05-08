@@ -1,5 +1,11 @@
 /* This file is for your main application css. */
-@import "bootstrap";
 
+@import "bootstrap";
 // Ad custom css files below this
 @import './layout.scss';
+.contract-list .table {
+  th,
+  td {
+    border: none;
+  }
+}
