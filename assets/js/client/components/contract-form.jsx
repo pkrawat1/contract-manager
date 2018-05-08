@@ -9,6 +9,7 @@ class ContractForm extends Component {
     super(props);
 
     this.state = {
+      id: '',
       vendor_id: "",
       category_id: "",
       ends_on: "",
@@ -20,15 +21,16 @@ class ContractForm extends Component {
 
   componentWillMount() {
     this.loadVendors();
-    
+
     const contract = this.props.contract;
 
-    if(contract) {
+    if (contract) {
       this.setState({
         vendor_id: contract.vendor_id,
         category_id: contract.category_id,
         ends_on: moment(contract.ends_on, "YYYY-MM-DD").format("MMM DD, YYYY"),
         costs: contract.costs,
+        id: contract.id
       });
     }
   }
@@ -42,7 +44,7 @@ class ContractForm extends Component {
   renderVendorList() {
     return this.state
       .vendors.map(vendor =>
-        <option defaultValue={vendor.id === this.state.vendor_id ? 'selected' : false} key={vendor.id} value={vendor.id}>
+        <option key={vendor.id} value={vendor.id}>
           {vendor.name}
         </option>
       );
@@ -56,7 +58,7 @@ class ContractForm extends Component {
     if (!selectedVendor) { return }
 
     return selectedVendor.categories.map(category =>
-      <option defaultValue={category.id === this.state.category_id ? 'selected' : false} key={category.id} value={category.id}>
+      <option key={category.id} value={category.id}>
         {category.name}
       </option>
     );
@@ -71,11 +73,17 @@ class ContractForm extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    const {vendor_id, category_id, costs} = this.state;
+    const { id, vendor_id, category_id, costs } = this.state;
     const ends_on = moment(this.state.ends_on, "MMM DD, YYYY");
-    const params = {ends_on, vendor_id, category_id, costs};
+    const contract = { id, ends_on, vendor_id, category_id, costs };
 
-    axios.post("/api/v1/contracts", { contract: params })
+    const params = contract.id ? { id: contract.id, contract } : { contract }
+
+    axios({
+      method: contract.id ? 'put' : 'post',
+      url: `/api/v1/contracts/${contract.id}`,
+      data: params
+    })
       .then(res => this.props.contractSubmitted())
       .catch(error =>
         this.setState(
@@ -100,7 +108,8 @@ class ContractForm extends Component {
             name="vendor_id"
             id="vendor_id"
             onChange={this.handleChange.bind(this)}
-            invalid={!!error.vendor_id}>
+            invalid={!!error.vendor_id}
+            value={this.state.vendor_id}>
             <option disabled>Select Vendor</option>
             {this.renderVendorList()}
           </Input>
@@ -113,7 +122,8 @@ class ContractForm extends Component {
             name="category_id"
             id="category_id"
             onChange={this.handleChange.bind(this)}
-            invalid={!!error.category_id}>
+            invalid={!!error.category_id}
+            value={this.state.category_id}>
             <option disabled>Select Category</option>
             {this.renderCategoryList()}
           </Input>

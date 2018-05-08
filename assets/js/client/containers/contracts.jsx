@@ -52,6 +52,7 @@ class Contracts extends Component {
   }
 
   contractListUpdated() {
+    this.getContractList();
     this.setState(
       Object.assign(
         this.state, {
@@ -60,7 +61,7 @@ class Contracts extends Component {
           isFormOpen: false
         }
       ),
-      this.getContractList.bind(this)
+      () => console.log(this.state)
     );
   }
 
@@ -74,7 +75,7 @@ class Contracts extends Component {
     if (!confirm) { return }
 
     axios.delete(`/api/v1/contracts/${this.state.selectedContract.id}`)
-      .then(res => this.contractListUpdated)
+      .then(res => this.contractListUpdated.bind(this))
       .catch(error => console.log(error));
   }
 

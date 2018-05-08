@@ -214,7 +214,7 @@ defmodule ContractManager.Contracts do
       from(
         ct in Contract.with_vendor_and_category(),
         where: ct.ends_on >= ^Date.utc_today(),
-        order_by: [desc: :updated_at]
+        order_by: [asc: :ends_on]
       )
 
     query
