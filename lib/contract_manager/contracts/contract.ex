@@ -1,6 +1,7 @@
 defmodule ContractManager.Contracts.Contract do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
 
   schema "contracts" do
     field(:costs, :decimal)
@@ -18,6 +19,10 @@ defmodule ContractManager.Contracts.Contract do
     |> cast(attrs, [:costs, :ends_on, :vendor_id, :category_id])
     |> validate_required([:costs, :ends_on, :vendor_id, :category_id])
     |> validate_ends_on
+  end
+
+  def with_vendor_and_category(query \\ __MODULE__) do
+    from q in query, preload: [:vendor, :category]
   end
 
   defp validate_ends_on(changeset) do

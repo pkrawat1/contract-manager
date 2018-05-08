@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button } from 'reactstrap';
-import { Footer, Header } from "./layout";
+import { Header } from "./layout";
 import Auth from "./containers/auth";
 import Contracts from "./containers/contracts";
 import axios from "axios";
@@ -39,7 +39,6 @@ class App extends Component {
       <div className="app">
         <Header logout={this.logout.bind(this)} isAuthenticated={this.state.isAuthenticated} />
         {this.renderContractList()}
-        <Footer />
       </div>
     )
   }

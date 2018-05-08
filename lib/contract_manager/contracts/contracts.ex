@@ -210,11 +210,15 @@ defmodule ContractManager.Contracts do
 
   """
   def list_contracts do
-    query = from(ct in Contract, where: ct.ends_on >= ^Date.utc_today())
+    query =
+      from(
+        ct in Contract.with_vendor_and_category(),
+        where: ct.ends_on >= ^Date.utc_today(),
+        order_by: [desc: :updated_at]
+      )
 
     query
     |> Repo.all()
-    |> Repo.preload([:vendor, :category])
   end
 
   @doc """
@@ -231,7 +235,7 @@ defmodule ContractManager.Contracts do
       ** (Ecto.NoResultsError)
 
   """
-  def get_contract!(id), do: Repo.get!(Contract, id)
+  def get_contract!(id), do: Contract |> Contract.with_vendor_and_category() |> Repo.get!(id)
 
   @doc """
   Creates a contract.

@@ -66,7 +66,13 @@ class ContractForm extends Component {
 
     axios.post("/api/v1/contracts", { contract: params })
       .then(res => this.props.contractSubmitted(res.data.data))
-      .catch(error => this.setState(Object.assign(this.state, { errors: error.response.data.errors })));
+      .catch(error =>
+        this.setState(
+          Object.assign(this.state, {
+            errors: error.response && error.response.data.errors
+          })
+        )
+      );
   }
 
   render() {

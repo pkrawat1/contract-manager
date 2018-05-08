@@ -16,7 +16,7 @@ defmodule ContractManagerWeb.ContractController do
       conn
       |> put_status(:created)
       |> put_resp_header("location", contract_path(conn, :show, contract))
-      |> render("show.json", contract: contract)
+      |> render("show.json", contract: Contracts.get_contract!(contract.id))
     end
   end
 

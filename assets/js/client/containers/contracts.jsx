@@ -53,9 +53,20 @@ class Contracts extends Component {
 
   contractListUpdated(contract) {
     console.log(contract);
+    this.setState(
+      Object.assign(
+        this.state, {
+          isContractShow: false,
+          selectedContract: null,
+          isFormOpen: false,
+          contractList: [contract, ...this.state.contractList]
+        }
+      )
+    );
   }
 
   renderContractList() {
+    console.log(this.state)
     if (this.state.isContractShow || this.state.isFormOpen) { return }
     return (
       <ListGroup className="contract-list mt-3">
@@ -79,7 +90,7 @@ class Contracts extends Component {
 
   renderContractForm() {
     if (!this.state.isFormOpen) { return }
-    return <ContractForm contractSubmitted={this.contractListUpdated} contract={this.state.selectedContract}></ContractForm>;
+    return <ContractForm contractSubmitted={this.contractListUpdated.bind(this)} contract={this.state.selectedContract}></ContractForm>;
   }
 
   renderContract() {
@@ -97,6 +108,10 @@ class Contracts extends Component {
           <dt>Ends on</dt>
           <dd><Moment format="MMM DD, YYYY">{selectedContract.ends_on}</Moment></dd>
         </dl>
+        <h3>
+          <Button>Edit</Button>
+          <Button>Delete</Button>
+        </h3>
       </div>
     )
   }
