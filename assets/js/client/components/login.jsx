@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { Alert, Button, Form, FormGroup, Label, Input, FormText, FormFeedback } from 'reactstrap';
 
 class Login extends Component {
   constructor(props) {
@@ -23,6 +23,8 @@ class Login extends Component {
   }
 
   render() {
+    const error = this.props.error;
+
     return (
       <Form onSubmit={this.handleSubmit.bind(this)}>
         <legend>Existing User</legend>
@@ -38,7 +40,9 @@ class Login extends Component {
             placeholder="example@123.com"
             value={this.state.email}
             onChange={this.handleChange.bind(this)}
+            invalid={!!error}
           />
+          <FormFeedback>{error}</FormFeedback>
         </FormGroup>
         <FormGroup>
           <Label for="LoginPassword">Password</Label>
@@ -49,7 +53,9 @@ class Login extends Component {
             placeholder="xxxxxxx"
             value={this.state.password}
             onChange={this.handleChange.bind(this)}
+            invalid={!!error}
           />
+          <FormFeedback>{error}</FormFeedback>
         </FormGroup>
         <Button>Submit</Button>
       </Form>

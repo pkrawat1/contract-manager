@@ -17,4 +17,10 @@ defmodule ContractManagerWeb.FallbackController do
     |> put_status(:not_found)
     |> render(ContractManagerWeb.ErrorView, :"404")
   end
+
+  def call(conn, {:error, invalid_creds}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> render(ContractManagerWeb.SessionView, "error.json")
+  end
 end

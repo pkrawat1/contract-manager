@@ -9,8 +9,8 @@ class Auth extends Component {
     super(props);
 
     this.state = {
-      sessionError: {},
-      registrationError: {}
+      sessionError: null,
+      registrationError: null
     };
   }
 
@@ -34,24 +34,21 @@ class Auth extends Component {
   registerUser(registration) {
     axios.post("/api/v1/registrations", { registration })
       .then(response => this.setAuthenticated(response.data.jwt))
-      .catch((error) => {
-        console.log(error);
-      });
+      .catch(error => this.setState({ registrationError: error.response.data.errors }));
   }
 
   login(session) {
     axios.post("/api/v1/sessions", { session })
       .then(response => this.setAuthenticated(response.data.jwt))
-      .catch(function (error) {
-        console.log(error);
-      });
+      .catch(error => this.setState({ sessionError: error.response.data.error }));
   }
 
   render() {
+    console.log(this.state)
     return (
       <Container>
         <Row className="mt-5 pt-5">
-          <Col><SignUp submitClicked={this.registerUser.bind(this)} /></Col>
+          <Col><SignUp error={this.state.registrationError} submitClicked={this.registerUser.bind(this)} /></Col>
           <Col className="border-left"><Login error={this.state.sessionError} submitClicked={this.login.bind(this)} /></Col>
         </Row>
       </Container>

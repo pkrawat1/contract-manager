@@ -3,20 +3,17 @@ defmodule ContractManagerWeb.SessionController do
 
   alias ContractManager.Accounts
   alias ContractManagerWeb.Guardian
+  alias Accounts.User
+
+  action_fallback(ContractManagerWeb.FallbackController)
 
   def create(conn, %{"session" => session_params}) do
-    case Accounts.create_session(session_params) do
-      {:ok, user} ->
-        {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user)
+    with {:ok, %User{} = user} <- Accounts.create_session(session_params) do
+      {:ok, jwt, _full_claims} = Guardian.encode_and_sign(user)
 
-        conn
-        |> put_status(:created)
-        |> render("show.json", jwt: jwt, user: user)
-
-      :error ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render("error.json")
+      conn
+      |> put_status(:created)
+      |> render("show.json", jwt: jwt, user: user)
     end
   end
 

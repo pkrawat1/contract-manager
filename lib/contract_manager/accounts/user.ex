@@ -11,12 +11,13 @@ defmodule ContractManager.Accounts.User do
     field(:email, :string)
     field(:encrypted_password, :string)
     field(:password, :string, virtual: true)
+    field(:password_confirmation, :string, virtual: true)
     field(:full_name, :string)
 
     timestamps()
   end
 
-  @required_fields ~w(full_name email password)a
+  @required_fields ~w(full_name email password password_confirmation)a
 
   @doc false
   def changeset(model, params \\ %{}) do

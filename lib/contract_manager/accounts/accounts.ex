@@ -47,7 +47,7 @@ defmodule ContractManager.Accounts do
 
     case check_password(user, password) do
       true -> {:ok, user}
-      _ -> :error
+      _ -> {:error, :invalid_creds}
     end
   end
 

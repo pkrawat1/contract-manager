@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+import { FormFeedback, Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
 
 class SignUp extends Component {
   constructor(props) {
@@ -25,6 +25,8 @@ class SignUp extends Component {
   }
 
   render() {
+    const error = this.props.error || {};
+
     return (
       <Form onSubmit={this.handleSubmit.bind(this)}>
         <legend>New User!</legend>
@@ -38,7 +40,10 @@ class SignUp extends Component {
             id="SignUpFullName"
             placeholder="Enter full name"
             value={this.state.full_name}
-            onChange={this.handleChange.bind(this)} />
+            onChange={this.handleChange.bind(this)}
+            invalid={!!error.full_name}
+          />
+          <FormFeedback>{error.full_name ? error.full_name[0] : ""}</FormFeedback>
         </FormGroup>
         <FormGroup>
           <Label for="SignUpEmail">Email</Label>
@@ -49,7 +54,9 @@ class SignUp extends Component {
             placeholder="example@123.com"
             value={this.state.email}
             onChange={this.handleChange.bind(this)}
+            invalid={!!error.email}
           />
+          <FormFeedback>{error.email ? error.email[0] : ""}</FormFeedback>
         </FormGroup>
         <FormGroup inline>
           <Label for="SignUpPassword">Password</Label>
@@ -60,18 +67,22 @@ class SignUp extends Component {
             placeholder="xxxxxxx"
             value={this.state.password}
             onChange={this.handleChange.bind(this)}
+            invalid={!!error.password}
           />
+          <FormFeedback>{error.password ? error.password[0] : ""}</FormFeedback>
         </FormGroup>
         <FormGroup>
           <Label for="SignUpConfirmPassword">Confirm Password</Label>
           <Input
             type="password"
-            name="confirm_password"
+            name="password_confirmation"
             id="SignUpConfirmPassword"
             placeholder="xxxxxxx"
-            value={this.state.confirm_password}
+            value={this.state.password_confirmation}
             onChange={this.handleChange.bind(this)}
+            invalid={!!error.password_confirmation}
           />
+          <FormFeedback>{error.password_confirmation ? error.password_confirmation[0] : ""}</FormFeedback>
         </FormGroup>
         <Button>Submit</Button>
       </Form>
