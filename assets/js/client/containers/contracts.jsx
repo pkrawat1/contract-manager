@@ -1,14 +1,20 @@
 import React, { Component } from "react";
-import { Container, Button, Row, Col, ListGroup, ListGroupItem, Table } from 'reactstrap';
+import { Container, Button, Row, Col, ListGroup } from 'reactstrap';
 import axios from "axios";
+import ContractListItem from "../components/contract-list-item";
+import ContractForm from "../components/contract-form";
 import Moment from 'react-moment';
+
 
 class Contracts extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      contractList: []
+      contractList: [],
+      selectedContract: null,
+      isFormOpen: false,
+      isContractShow: false
     };
 
     this.getContractList = this.getContractList.bind(this);
@@ -24,27 +30,75 @@ class Contracts extends Component {
       .catch(error => console.log(error));
   }
 
-  renderContractList() {
-    return this.state.contractList.map(item =>
-      <ListGroupItem key={item.id}>
-        <Table>
-          <tbody>
-            <tr>
-              <th>Vendor</th>
-              <th>Category</th>
-              <th>Costs</th>
-              <th>Ends On</th>
-            </tr>
-            <tr>
-              <td>{item.vendor}</td>
-              <td>{item.category}</td>
-              <td>{item.costs}</td>
-              <td><Moment format="MMM DD, YYYY">{item.ends_on}</Moment></td>
-            </tr>
-          </tbody>
-        </Table>
-      </ListGroupItem>
+  selectContract(contract) {
+    this.setState(
+      Object.assign(
+        this.state, {
+          selectedContract: contract,
+          isContractShow: true
+        }
+      )
     );
+  }
+
+  createNewContract() {
+    this.setState(
+      Object.assign(
+        this.state, {
+          isFormOpen: true
+        }
+      )
+    );
+  }
+
+  contractListUpdated(contract) {
+    console.log(contract);
+  }
+
+  renderContractList() {
+    if (this.state.isContractShow || this.state.isFormOpen) { return }
+    return (
+      <ListGroup className="contract-list mt-3">
+        <h4 className="text-center">
+          My Contracts <br />
+          <Button className="my-3" onClick={this.createNewContract.bind(this)}>Add Contract</Button>
+        </h4>
+        {
+          this.state
+            .contractList
+            .map(item =>
+              <ContractListItem
+                key={item.id}
+                contract={item}
+                selected={this.selectContract.bind(this)}></ContractListItem>
+            )
+        }
+      </ListGroup>
+    );
+  }
+
+  renderContractForm() {
+    if (!this.state.isFormOpen) { return }
+    return <ContractForm contractSubmitted={this.contractListUpdated} contract={this.state.selectedContract}></ContractForm>;
+  }
+
+  renderContract() {
+    const selectedContract = this.state.selectedContract
+    if (!(this.state.isContractShow && selectedContract)) { return }
+    return (
+      <div>
+        <dl>
+          <dt>Vendor</dt>
+          <dd>{selectedContract.vendor}</dd>
+          <dt>Category</dt>
+          <dd>{selectedContract.category}</dd>
+          <dt>Costs</dt>
+          <dd>{selectedContract.costs}</dd>
+          <dt>Ends on</dt>
+          <dd><Moment format="MMM DD, YYYY">{selectedContract.ends_on}</Moment></dd>
+        </dl>
+      </div>
+    )
   }
 
   render() {
@@ -52,15 +106,12 @@ class Contracts extends Component {
       <Container className="pt-5">
         <Row>
           <Col sm="12" md={{ size: 8, offset: 2 }}>
-            <h4 className="text-center">
-              My Contracts <br />
-              <Button className="mt-3">Add Contract</Button>
-            </h4>
-            <ListGroup className="contract-list mt-3">
-              {this.renderContractList()}
-            </ListGroup>
+            {this.renderContractForm()}
+            {this.renderContract()}
+            {this.renderContractList()}
           </Col>
         </Row>
+
       </Container>
     )
   }

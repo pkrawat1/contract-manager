@@ -11,6 +11,7 @@
 # and so on) as they will fail if something goes wrong.
 
 alias ContractManager.Contracts
+alias ContractManager.Accounts
 alias ContractManager.Repo
 
 vendors =
@@ -36,4 +37,12 @@ Contracts.create_contract(%{
   vendor_id: vendor.id,
   category_id: category.id,
   costs: 10.5
+})
+
+
+Accounts.create_registration(%{
+  full_name: "Test",
+  email: "test@123.com",
+  password: "123456",
+  password_confirmation: "123456"
 })

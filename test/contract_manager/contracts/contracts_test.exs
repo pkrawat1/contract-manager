@@ -126,8 +126,8 @@ defmodule ContractManager.ContractsTest do
   describe "contracts" do
     alias ContractManager.Contracts.Contract
 
-    @valid_attrs %{costs: "120.5", ends_on: ~D[2010-04-17], name: "some name"}
-    @update_attrs %{costs: "456.7", ends_on: ~D[2011-05-18], name: "some updated name"}
+    @valid_attrs %{costs: "120.5", ends_on: ~D[2010-04-17]}
+    @update_attrs %{costs: "456.7", ends_on: ~D[2011-05-18]}
     @invalid_attrs %{costs: nil, ends_on: nil, name: nil}
 
     def contract_fixture(attrs \\ %{}) do
@@ -153,7 +153,6 @@ defmodule ContractManager.ContractsTest do
       assert {:ok, %Contract{} = contract} = Contracts.create_contract(@valid_attrs)
       assert contract.costs == Decimal.new("120.5")
       assert contract.ends_on == ~D[2010-04-17]
-      assert contract.name == "some name"
     end
 
     test "create_contract/1 with invalid data returns error changeset" do
@@ -166,7 +165,6 @@ defmodule ContractManager.ContractsTest do
       assert %Contract{} = contract
       assert contract.costs == Decimal.new("456.7")
       assert contract.ends_on == ~D[2011-05-18]
-      assert contract.name == "some updated name"
     end
 
     test "update_contract/2 with invalid data returns error changeset" do

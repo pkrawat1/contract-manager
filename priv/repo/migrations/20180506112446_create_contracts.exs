@@ -3,7 +3,6 @@ defmodule ContractManager.Repo.Migrations.CreateContracts do
 
   def change do
     create table(:contracts) do
-      add :name, :string
       add :costs, :decimal
       add :ends_on, :date
       add :vendor_id, references(:vendors, on_delete: :nothing)

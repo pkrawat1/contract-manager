@@ -12,7 +12,6 @@ defmodule ContractManagerWeb.ContractView do
 
   def render("contract.json", %{contract: contract}) do
     %{id: contract.id,
-      name: contract.name,
       costs: contract.costs,
       ends_on: contract.ends_on,
       vendor: contract.vendor.name,

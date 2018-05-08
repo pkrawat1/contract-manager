@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Alert, Button, Form, FormGroup, Label, Input, FormText, FormFeedback } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input, FormText, FormFeedback } from 'reactstrap';
 
 class Login extends Component {
   constructor(props) {
