@@ -26,7 +26,7 @@ class Contracts extends Component {
 
   getContractList() {
     axios.get("/api/v1/contracts")
-      .then(response => this.setState({ contractList: response.data.data }))
+      .then(response => this.setState(Object.assign(this.state, { contractList: response.data.data })))
       .catch(error => console.log(error));
   }
 
@@ -51,18 +51,31 @@ class Contracts extends Component {
     );
   }
 
-  contractListUpdated(contract) {
-    console.log(contract);
+  contractListUpdated() {
     this.setState(
       Object.assign(
         this.state, {
           isContractShow: false,
           selectedContract: null,
-          isFormOpen: false,
-          contractList: [contract, ...this.state.contractList]
+          isFormOpen: false
         }
-      )
+      ),
+      this.getContractList.bind(this)
     );
+  }
+
+  isEditingContract() {
+    this.setState(Object.assign(this.state, { isFormOpen: true }));
+  }
+
+  isDeletingContract() {
+    const confirm = window.confirm("Are you sure!!");
+
+    if (!confirm) { return }
+
+    axios.delete(`/api/v1/contracts/${this.state.selectedContract.id}`)
+      .then(res => this.contractListUpdated)
+      .catch(error => console.log(error));
   }
 
   renderContractList() {
@@ -95,7 +108,7 @@ class Contracts extends Component {
 
   renderContract() {
     const selectedContract = this.state.selectedContract
-    if (!(this.state.isContractShow && selectedContract)) { return }
+    if (!(this.state.isContractShow && selectedContract && !this.state.isFormOpen)) { return }
     return (
       <div>
         <dl>
@@ -109,8 +122,8 @@ class Contracts extends Component {
           <dd><Moment format="MMM DD, YYYY">{selectedContract.ends_on}</Moment></dd>
         </dl>
         <h3>
-          <Button>Edit</Button>
-          <Button>Delete</Button>
+          <Button onClick={this.isEditingContract.bind(this)}>Edit</Button>
+          <Button onClick={this.isDeletingContract.bind(this)}>Delete</Button>
         </h3>
       </div>
     )

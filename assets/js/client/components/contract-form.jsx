@@ -20,6 +20,17 @@ class ContractForm extends Component {
 
   componentWillMount() {
     this.loadVendors();
+    
+    const contract = this.props.contract;
+
+    if(contract) {
+      this.setState({
+        vendor_id: contract.vendor_id,
+        category_id: contract.category_id,
+        ends_on: moment(contract.ends_on, "YYYY-MM-DD").format("MMM DD, YYYY"),
+        costs: contract.costs,
+      });
+    }
   }
 
   loadVendors() {
@@ -61,11 +72,11 @@ class ContractForm extends Component {
     event.preventDefault();
 
     const {vendor_id, category_id, costs} = this.state;
-    const ends_on = moment(this.state.ends_on, "LL");
+    const ends_on = moment(this.state.ends_on, "MMM DD, YYYY");
     const params = {ends_on, vendor_id, category_id, costs};
 
     axios.post("/api/v1/contracts", { contract: params })
-      .then(res => this.props.contractSubmitted(res.data.data))
+      .then(res => this.props.contractSubmitted())
       .catch(error =>
         this.setState(
           Object.assign(this.state, {
@@ -129,7 +140,7 @@ class ContractForm extends Component {
             type="text"
             name="ends_on"
             id="ends_on"
-            placeholder="eg: 15 Aug, 2019"
+            placeholder="eg: Aug 19, 2019"
             value={this.state.ends_on}
             onChange={this.handleChange.bind(this)}
             invalid={!!error.ends_on}
