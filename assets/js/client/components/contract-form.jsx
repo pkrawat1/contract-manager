@@ -157,7 +157,7 @@ class ContractForm extends Component {
           />
           <FormFeedback>{error.ends_on ? error.ends_on[0] : ""}</FormFeedback>
         </FormGroup>
-        <Button className="mt-3">Submit</Button>
+        <Button className="mt-3 btn-info border-0">Submit</Button>
       </Form>
     )
   }
