@@ -75,7 +75,7 @@ class Contracts extends Component {
     if (!confirm) { return }
 
     axios.delete(`/api/v1/contracts/${this.state.selectedContract.id}`)
-      .then(res => this.contractListUpdated.bind(this))
+      .then(res => this.contractListUpdated.bind(this)())
       .catch(error => console.log(error));
   }
 

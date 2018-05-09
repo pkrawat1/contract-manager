@@ -73,8 +73,8 @@ class ContractForm extends Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    const { id, vendor_id, category_id, costs } = this.state;
-    const ends_on = moment(this.state.ends_on, "MMM DD, YYYY");
+    const { id, vendor_id, category_id, costs } = this.state;    
+    const ends_on = moment(this.state.ends_on, "MMM DD, YYYY").format();
     const contract = { id, ends_on, vendor_id, category_id, costs };
 
     const params = contract.id ? { id: contract.id, contract } : { contract }
