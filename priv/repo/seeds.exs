@@ -14,6 +14,13 @@ alias ContractManager.Contracts
 alias ContractManager.Accounts
 alias ContractManager.Repo
 
+{:ok, user} = Accounts.create_registration(%{
+  full_name: "Test",
+  email: "test@123.com",
+  password: "123456",
+  password_confirmation: "123456"
+})
+
 vendors =
   %{
     "Vodafone" => ["Internet", "DSL", "Phone", "Mobile Phone"],
@@ -36,13 +43,6 @@ Contracts.create_contract(%{
   ends_on: ~D[2019-04-17],
   vendor_id: vendor.id,
   category_id: category.id,
+  user_id: user.id,
   costs: 10.5
-})
-
-
-Accounts.create_registration(%{
-  full_name: "Test",
-  email: "test@123.com",
-  password: "123456",
-  password_confirmation: "123456"
 })
