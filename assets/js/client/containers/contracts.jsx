@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Button, Row, Col, ListGroup } from 'reactstrap';
+import { Container, Button, Row, Col, ListGroup, ListGroupItem } from 'reactstrap';
 import axios from "axios";
 import ContractListItem from "../components/contract-list-item";
 import ContractForm from "../components/contract-form";
@@ -86,7 +86,7 @@ class Contracts extends Component {
       <ListGroup className="contract-list mt-3">
         <h4 className="text-center">
           My Contracts <br />
-          <Button className="my-3" onClick={this.createNewContract.bind(this)}>Add Contract</Button>
+          <Button className="my-3 btn-success border-0 shadow-sm" onClick={this.createNewContract.bind(this)}>Add Contract</Button>
         </h4>
         {
           this.state
@@ -98,6 +98,7 @@ class Contracts extends Component {
                 selected={this.selectContract.bind(this)}></ContractListItem>
             )
         }
+        {this.state.contractList.length ? null : (<ListGroupItem className="shadow-sm rounded mb-3 text-center"><h3>No Records found</h3></ListGroupItem>)}
       </ListGroup>
     );
   }
@@ -112,7 +113,8 @@ class Contracts extends Component {
     if (!(this.state.isContractShow && selectedContract && !this.state.isFormOpen)) { return }
     return (
       <div>
-        <dl>
+        <h3 className="text-center">Contract Details</h3>
+        <dl className="col-md-4 offset-md-4 my-5">
           <dt>Vendor</dt>
           <dd>{selectedContract.vendor}</dd>
           <dt>Category</dt>
@@ -122,9 +124,9 @@ class Contracts extends Component {
           <dt>Ends on</dt>
           <dd><Moment format="MMM DD, YYYY">{selectedContract.ends_on}</Moment></dd>
         </dl>
-        <h3>
-          <Button onClick={this.isEditingContract.bind(this)}>Edit</Button>
-          <Button onClick={this.isDeletingContract.bind(this)}>Delete</Button>
+        <h3 className="text-center">
+          <Button className="mx-3 btn-info border-0" onClick={this.isEditingContract.bind(this)}>Edit</Button>
+          <Button className="mx-3 btn-danger border-0" onClick={this.isDeletingContract.bind(this)}>Delete</Button>
         </h3>
       </div>
     )
@@ -133,8 +135,8 @@ class Contracts extends Component {
   render() {
     return (
       <Container className="pt-5">
-        <Row>
-          <Col sm="12" md={{ size: 8, offset: 2 }}>
+        <Row className="justify-content-md-center">
+          <Col sm="12" md={{ size: 8 }}>
             {this.renderContractForm()}
             {this.renderContract()}
             {this.renderContractList()}

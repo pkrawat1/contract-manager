@@ -98,7 +98,7 @@ class ContractForm extends Component {
     const error = this.state.errors || {};
 
     return (
-      <Form onSubmit={this.handleSubmit.bind(this)}>
+      <Form className="card shadow-sm p-5 col-md-8 offset-md-2 align-center" onSubmit={this.handleSubmit.bind(this)}>
         <legend>{this.props.contract ? "Edit Contract" : "New Contract"}</legend>
         <hr />
         <FormGroup>
@@ -157,7 +157,7 @@ class ContractForm extends Component {
           />
           <FormFeedback>{error.ends_on ? error.ends_on[0] : ""}</FormFeedback>
         </FormGroup>
-        <Button>Submit</Button>
+        <Button className="mt-3">Submit</Button>
       </Form>
     )
   }

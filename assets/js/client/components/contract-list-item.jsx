@@ -7,7 +7,7 @@ class ContractListItem extends Component {
     const contract = this.props.contract;
 
     return (
-      <ListGroupItem onClick={() => this.props.selected(contract)}>
+      <ListGroupItem className="shadow-sm rounded mb-3" onClick={() => this.props.selected(contract)}>
         <Table>
           <tbody>
             <tr>

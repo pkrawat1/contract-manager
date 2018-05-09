@@ -4,9 +4,28 @@
 // Ad custom css files below this
 @import './layout.scss';
 
-.contract-list .table {
-  th,
-  td {
-    border: none;
+// 
+.contract-list {
+  .table {
+    th,
+    td {
+      border: none;
+    }
+  }.list-group-item:hover {
+    background-image: linear-gradient(to bottom left, rgba(59, 218, 230, 0.938), rgb(39, 219, 210));
+    color: white;
+    box-shadow: 0 0 2px 0px #aaa;
   }
+}
+
+.btn-success {
+  background-image: linear-gradient(to bottom left, rgb(31, 238, 172), rgb(86, 211, 182));
+}
+
+.btn-info {
+  background-image: linear-gradient(to bottom left, rgb(113, 213, 243), rgb(13, 167, 179));
+}
+
+.btn-danger {
+  background-image: linear-gradient(to bottom left, rgb(243, 132, 113), rgb(207, 20, 20));
 }
