@@ -1,6 +1,6 @@
 # ContractManager
 
-UI Screengrab [link](https://test.com) There is some info's like date, to, from for a transaction etc which I have not displayed so far as I was mostly interested in status of the transaction. This is something I was planning to work on but didn't get time.
+UI Demo [link](http://recordit.co/lvZQKHlBGa) There is some info's like date, to, from for a transaction etc which I have not displayed so far as I was mostly interested in status of the transaction. This is something I was planning to work on but didn't get time.
 
 Setup and Configs:
   * clone the repo from bitbucket
@@ -15,7 +15,7 @@ Setup and Configs:
     ```
   * Install React dependency
     ```
-    $ cd apps/web/assets
+    $ cd assets
     $ yarn install
     ```
   * Run the Phoenix server from root folder: `mix phx.server`
